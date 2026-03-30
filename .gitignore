@@ -1,0 +1,18 @@
+# --- Simulation Outputs ---
+# Ignore the compiled binary and any temporary execution files
+build/
+*.out
+*.log
+
+# --- Waveform Data ---
+# These files can be huge and shouldn't be uploaded to GitHub
+*.vcd
+*.gtkw
+
+# --- macOS Metadata ---
+# Prevents your Mac's hidden folder settings from being uploaded
+.DS_Store
+
+# --- VS Code Settings ---
+# Keeps your personal editor configuration out of the repository
+.vscode/
