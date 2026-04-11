@@ -22,3 +22,7 @@ brew install icarus-verilog
 
 # Install GTKWave (The Waveform Viewer)
 brew install --cask gtkwave
+```
+
+### 2. Install the Simulation Toolchain (Windows)
+Download the latest installer from [Bleyer.org](https://bleyer.org/icarus/). During installation, ensure you check the box to "Add executable folder(s) to the user PATH". This will install both Icarus Verilog and GTKWave
