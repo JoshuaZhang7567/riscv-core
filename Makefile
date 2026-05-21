@@ -1,27 +1,45 @@
-CC = iverilog	#compiler
+# ===========================================================================
+# RISC-V RV32I CPU — Project Makefile
+# ===========================================================================
 
-CFLAGS = -g2012		# -g2012 tells the compiler to use the SystemVerilog 2012 standard
+CC        = iverilog
+CFLAGS    = -g2012    # SystemVerilog 2012
 
-# Directories
-RTL_DIR = rtl
-TB_DIR  = tb
-BUILD_DIR = build
+# --- Directories ---
+CORE_DIR  = rtl/core
+MEM_DIR   = rtl/mem
+PERIPH_DIR= rtl/periph
+TOP_DIR   = rtl/top
+TB_UNIT   = tb/unit
+TB_SYS    = tb/system
+WAVE_DIR  = sim/waveforms
 
-SRC = $(RTL_DIR)/riscv_pkg.sv $(RTL_DIR)/alu.sv $(TB_DIR)/alu_tb.sv		# The list of files. riscv_pkg.sv must be first because the others depend on it!
+# --- Package (must be compiled first) ---
+PKG       = $(CORE_DIR)/riscv_pkg.sv
 
-OUT = $(BUILD_DIR)/sim.out
-VCD = $(BUILD_DIR)/alu_waves.vcd
+# ===========================================================================
+# ALU
+# ===========================================================================
+ALU_SRC   = $(PKG) $(CORE_DIR)/alu.sv $(TB_UNIT)/tb_alu.sv
+ALU_OUT   = $(WAVE_DIR)/tb_alu.out
+ALU_VCD   = $(WAVE_DIR)/alu_waves.vcd
 
-all: compile run
+alu: alu_compile alu_run
 
-prep:
-	mkdir -p $(BUILD_DIR)
+alu_compile:
+	mkdir -p $(WAVE_DIR)
+	$(CC) $(CFLAGS) -o $(ALU_OUT) $(ALU_SRC)
 
-compile: prep	#prep is a dependency
-	$(CC) $(CFLAGS) -o $(OUT) $(SRC)
+alu_run:
+	vvp $(ALU_OUT)
 
-run:
-	vvp $(OUT)
+alu_wave:
+	gtkwave $(ALU_VCD) &
 
-wave:
-	gtkwave $(VCD) &
+# ===========================================================================
+# Helpers
+# ===========================================================================
+clean:
+	rm -rf $(WAVE_DIR)/*.out $(WAVE_DIR)/*.vcd
+
+.PHONY: alu alu_compile alu_run alu_wave clean

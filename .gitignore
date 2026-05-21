@@ -1,18 +1,21 @@
 # --- Simulation Outputs ---
-# Ignore the compiled binary and any temporary execution files
-build/
+# Compiled binaries and temporary execution files
 *.out
 *.log
 
 # --- Waveform Data ---
 # These files can be huge and shouldn't be uploaded to GitHub
 *.vcd
+*.fst
 *.gtkw
 
+# --- Synthesis Outputs ---
+# FPGA build artifacts
+synth/project/**
+!synth/project/.gitkeep
+
 # --- macOS Metadata ---
-# Prevents your Mac's hidden folder settings from being uploaded
 .DS_Store
 
 # --- VS Code Settings ---
-# Keeps your personal editor configuration out of the repository
 .vscode/
