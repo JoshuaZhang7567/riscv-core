@@ -10,6 +10,7 @@ riscv-core/
 │   └── architecture.md
 ├── rtl/                  # SystemVerilog hardware source files
 │   ├── core/             # CPU core modules (ALU, RegFile, Control, Datapath)
+│   ├── lib/              # Generic primitives (mux2, mux3, adder, flopr, flopenr)
 │   ├── mem/              # Memory components (RAM, ROM wrappers)
 │   ├── periph/           # Peripherals (UART, GPIO, timers)
 │   └── top/              # Top-level integration and FPGA wrappers
