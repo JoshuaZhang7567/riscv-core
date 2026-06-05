@@ -19,9 +19,11 @@ Data Memory Module:
     - sh
     - sw
 */
+import riscv_pkg::*;
+
 module dmem
 #(
-    parameter ADDR_WIDTH = 32
+    parameter RAM_ADDR_WIDTH = XLEN
 )
 (
     input logic write_data,
@@ -49,7 +51,7 @@ module dmem
     // read data logic
     always_comb begin
         if(mem_read) read_data = ram[word_addr];
-        else read_data = 32'b0; // output zero (turn it off) when not reading (mem_read is 0)
+        else read_data = '0; // output zero (turn it off) when not reading (mem_read is 0)
     end
 
 endmodule
