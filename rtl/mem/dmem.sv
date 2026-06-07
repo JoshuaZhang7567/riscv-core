@@ -22,12 +22,12 @@ import riscv_pkg::*;
 
 module dmem
 #(
-    parameter RAM_ADDR_WIDTH = XLEN
+    parameter ADDR_WIDTH = XLEN
 )
 (
     // inputs
-    input logic [XLEN-1:0] write_data,
-    input logic [XLEN-1:0] addr,
+    input logic [XLEN-1:0] [XLEN-1:0] write_data,
+    input logic [XLEN-1:0] [XLEN-1:0] addr,
 
     // control signals
     input logic clk,
@@ -35,6 +35,7 @@ module dmem
     input logic mem_read,
     input funct3_dmem_t funct3,
 
+    output logic [XLEN-1:0] read_data
     output logic [XLEN-1:0] read_data
 );
     // declare ram
