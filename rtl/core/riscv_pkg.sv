@@ -85,6 +85,19 @@ package riscv_pkg;
     F3_SW       = 3'b010        // Store Word
   } funct3_store_t;
 
+  // combine load and store into one type for dmem
+  typedef enum logic [2:0] {
+    F3_LB       = 3'b000,       // Load Byte (sign-extended)
+    F3_LH       = 3'b001,       // Load Halfword (sign-extended)
+    F3_LW       = 3'b010,       // Load Word
+    F3_LBU      = 3'b100,       // Load Byte (zero-extended)
+    F3_LHU      = 3'b101        // Load Halfword (zero-extended)
+    
+    F3_SB       = 3'b000,       // Store Byte
+    F3_SH       = 3'b001,       // Store Halfword
+    F3_SW       = 3'b010        // Store Word
+  } funct3_dmem_t;
+
   // ==========================================================================
   // funct7 Encodings
   // ==========================================================================
