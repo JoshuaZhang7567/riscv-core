@@ -26,7 +26,7 @@ module alu (
   logic [XLEN-1:0] sum;
   logic            cout;
 
-  //Addition / Subtraction shared path
+  // Addition / Subtraction shared path
   always_comb begin
     if (alu_control == ALU_SUB)
       {cout, sum} = {1'b0, a} + {1'b0, ~b} + 33'd1;
