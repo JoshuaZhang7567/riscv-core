@@ -1,8 +1,3 @@
-// ============================================================================
-// File:    alu.sv
-// Project: riscv-core — Single-Cycle RV32I CPU
-//
-// Description:
 //   32-bit ALU supporting all RV32I arithmetic/logic/shift/compare operations.
 //   The operation is selected by alu_control (type alu_control_t from riscv_pkg).
 //
