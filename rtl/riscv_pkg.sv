@@ -40,7 +40,7 @@ package riscv_pkg;
     OP_IMM      = 7'b0010011,   // Register-Immediate (ADDI, SLTI, ...)
     OP_REG      = 7'b0110011,   // Register-Register  (ADD, SUB, ...)
     OP_FENCE    = 7'b0001111,   // Memory Fence
-    //OP_SYSTEM   = 7'b1110011    // System (ECALL, EBREAK)
+    OP_SYSTEM   = 7'b1110011    // System (ECALL, EBREAK)
   } opcode_t;
 
   // ==========================================================================
