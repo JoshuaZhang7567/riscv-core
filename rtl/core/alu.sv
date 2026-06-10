@@ -1,12 +1,3 @@
-//   32-bit ALU supporting all RV32I arithmetic/logic/shift/compare operations.
-//   The operation is selected by alu_control (type alu_control_t from riscv_pkg).
-//
-//   Operations:
-//     ALU_ADD    (0000)  →  a + b
-//     ALU_SUB    (0001)  →  a - b         (also drives Zero flag for branches)
-//     ALU_AND    (0010)  →  a & b
-//     ALU_OR     (0011)  →  a | b
-//     ALU_XOR    (0100)  →  a ^ b
 //     ALU_SLT    (0101)  →  signed   (a < b) ? 1 : 0
 //     ALU_SLTU   (0110)  →  unsigned (a < b) ? 1 : 0
 //     ALU_SLL    (0111)  →  a << b[4:0]
@@ -35,8 +26,7 @@ module alu (
   logic [XLEN-1:0] sum;
   logic            cout;
 
-  // ---- Addition / Subtraction shared path ---------------------------------
-  // SUB reuses the adder with two's-complement negation: a + (~b) + 1
+  //Addition / Subtraction shared path
   always_comb begin
     if (alu_control == ALU_SUB)
       {cout, sum} = {1'b0, a} + {1'b0, ~b} + 33'd1;
@@ -44,7 +34,6 @@ module alu (
       {cout, sum} = {1'b0, a} + {1'b0,  b};
   end
 
-  // ---- Main operation select ----------------------------------------------
   always_comb begin
     unique case (alu_control)
       ALU_ADD:    result = sum;
@@ -62,7 +51,6 @@ module alu (
     endcase
   end
 
-  // ---- Status flags -------------------------------------------------------
   assign zero = (result == '0);
   assign neg  = result[XLEN-1];
 
