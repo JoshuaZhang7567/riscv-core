@@ -1,18 +1,7 @@
-// ============================================================================
-// File:    regfile.sv
-// Project: riscv-core — Single-Cycle RV32I CPU
-//
-// Description:
 //   32-entry x 32-bit register file.
 //   - Two asynchronous read ports  (rs1, rs2)
 //   - One synchronous write port   (rd)
 //   - x0 is hardwired to zero (writes to x0 are silently ignored)
-//
-// Interface matches the Harris & Harris datapath diagram:
-//   a1 / rd1  →  rs1 read
-//   a2 / rd2  →  rs2 read
-//   a3 / wd3  →  rd  write (on rising clock edge, when we3 is asserted)
-// ============================================================================
 
 import riscv_pkg::*;
 
