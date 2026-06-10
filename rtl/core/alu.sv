@@ -18,7 +18,6 @@
 //     zero  — result == 0  (used by branch logic: BEQ/BNE on SUB, BLT on SLT)
 //     neg   — result[31]   (sign bit, useful for richer branch decoding)
 //     ovf   — signed overflow (optional; useful for full flag-based branching)
-// ============================================================================
 
 import riscv_pkg::*;
 
