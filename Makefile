@@ -15,7 +15,7 @@ TB_SYS    = tb/system
 WAVE_DIR  = sim/waveforms
 
 # --- Package (must be compiled first) ---
-PKG       = $(CORE_DIR)/riscv_pkg.sv
+PKG       = rtl/riscv_pkg.sv
 
 # ===========================================================================
 # ALU

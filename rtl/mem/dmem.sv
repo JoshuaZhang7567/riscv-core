@@ -22,29 +22,28 @@ import riscv_pkg::*;
 
 module dmem
 #(
-    parameter ADDR_WIDTH = XLEN
+    parameter ADDR_WIDTH = 12    // 12 bits → 4 KiB (1024 words), override at instantiation
 )
 (
     // inputs
-    input logic [XLEN-1:0] [XLEN-1:0] write_data,
-    input logic [XLEN-1:0] [XLEN-1:0] addr,
+    input logic [XLEN-1:0] write_data,
+    input logic [XLEN-1:0] addr,
 
     // control signals
     input logic clk,
     input logic mem_write,
     input logic mem_read,
-    input funct3_dmem_t funct3,
+    input logic [2:0] funct3,
 
-    output logic [XLEN-1:0] read_data
     output logic [XLEN-1:0] read_data
 );
     // declare ram
-    localparam DEPTH = 1 << (RAM_ADDR_WIDTH-2); // 2 to the power of (ADDR_WIDTH-2); shift binary one left (ADDR_WIDTH-2) bits. Minus 2 to the exponent is essentially divide by 4, because each row is 4 bytes.
+    localparam DEPTH = 1 << (ADDR_WIDTH-2); // 2 to the power of (ADDR_WIDTH-2); shift binary one left (ADDR_WIDTH-2) bits. Minus 2 to the exponent is essentially divide by 4, because each row is 4 bytes.
     logic [31:0] ram [0:DEPTH-1];
 
     // calculate word addr, since addr is currently byte addr
-    logic [RAM_ADDR_WIDTH-2-1:0] word_addr; // 2^32 bytes, so 2^30 words
-    assign word_addr = addr[RAM_ADDR_WIDTH-1:2]; //drop the last 2 bits, those determine which byte within a word
+    logic [ADDR_WIDTH-2-1:0] word_addr; // 2^32 bytes, so 2^30 words
+    assign word_addr = addr[ADDR_WIDTH-1:2]; //drop the last 2 bits, those determine which byte within a word
 
     // write data logic
     always_ff @(posedge clk) begin
@@ -83,7 +82,7 @@ module dmem
                     endcase
                 end
                 F3_LH: begin
-                    case (add[1])
+                    case (addr[1])
                         1'b0: read_data = {{16{ram[word_addr][15]}}, ram[word_addr][15:0]};
                         1'b1: read_data = {{16{ram[word_addr][31]}}, ram[word_addr][31:16]};
                     endcase
@@ -100,7 +99,7 @@ module dmem
                     endcase
                 end
                 F3_LHU: begin
-                    case (add[1])
+                    case (addr[1])
                         1'b0: read_data = {16'b0, ram[word_addr][15:0]};
                         1'b1: read_data = {16'b0, ram[word_addr][31:16]};
                     endcase

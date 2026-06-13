@@ -14,7 +14,7 @@ module immgen(input  logic [31:7]  instr,
                           instr[11:7]};
                           
                 // B-type (branches)
-      IMM_B:   immext = {{20{instr[31]}}, instr[7],
+      IMM_B:   immext = {{19{instr[31]}}, instr[31], instr[7],
                           instr[30:25], instr[11:8], 1'b0};
                           
                 // J-type (jal)
