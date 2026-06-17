@@ -3,7 +3,7 @@ import riscv_pkg::*;
 module imem
 #(
     parameter int unsigned DEPTH      = 1024,   // words (4 KiB)
-    parameter string       MEM_INIT_F = ""
+    parameter              MEM_INIT_F = ""
 )
 (
     input  logic [XLEN-1:0] pc_addr,

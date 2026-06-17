@@ -42,7 +42,7 @@ module dmem
     logic [31:0] ram [0:DEPTH-1];
 
     // calculate word addr, since addr is currently byte addr
-    logic [ADDR_WIDTH-2-1:0] word_addr; // 2^32 bytes, so 2^30 words
+    logic [ADDR_WIDTH-2-1:0] word_addr; // 2^12 bytes, so 2^10 words
     assign word_addr = addr[ADDR_WIDTH-1:2]; //drop the last 2 bits, those determine which byte within a word
 
     // write data logic
