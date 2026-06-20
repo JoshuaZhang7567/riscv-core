@@ -15,7 +15,7 @@ import riscv_pkg::*;
 module alu (
     input  logic [XLEN-1:0]       a,            // Operand A (rs1 or PC)
     input  logic [XLEN-1:0]       b,            // Operand B (rs2 or ImmExt)
-    input  alu_control_t          alu_op,  // Operation select
+    input  alu_control_t          alu_control,  // Operation select
 
     output logic [XLEN-1:0]       result,       // ALU result
     output logic                  zero,         // result == 0
@@ -28,14 +28,14 @@ module alu (
 
   // Addition / Subtraction shared path
   always_comb begin
-    if (alu_op == ALU_SUB)
+    if (alu_control == ALU_SUB)
       {cout, sum} = {1'b0, a} + {1'b0, ~b} + 33'd1;
     else
       {cout, sum} = {1'b0, a} + {1'b0,  b};
   end
 
   always_comb begin
-    unique case (alu_op)
+    unique case (alu_control)
       ALU_ADD:    result = sum;
       ALU_SUB:    result = sum;
       ALU_AND:    result = a & b;
@@ -59,7 +59,7 @@ module alu (
   //   ADD ovf: a[31]==b[31] but result[31] differs
   //   SUB ovf: a[31]!=b[31] but result[31] == b[31]
   always_comb begin
-    case (alu_op)
+    case (alu_control)
       ALU_ADD: ovf = (~a[XLEN-1] & ~b[XLEN-1] &  result[XLEN-1])
                    | ( a[XLEN-1] &  b[XLEN-1] & ~result[XLEN-1]);
       ALU_SUB: ovf = (~a[XLEN-1] &  b[XLEN-1] &  result[XLEN-1])
