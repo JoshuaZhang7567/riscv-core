@@ -1,0 +1,29 @@
+// ============================================================================
+// test_basic.hex — Hand-assembled RV32I test program
+//
+// Tests: ADDI, ADD, SUB, SW, LW, BEQ (taken), JAL
+//
+// Expected results after execution:
+//   x1  = 5        x5  = 8         x9  = 0 (skipped)
+//   x2  = 3        x6  = 0 (skip)  x10 = 42
+//   x3  = 8        x7  = 1
+//   x4  = 2        x8  = 0x28
+//   mem[0] = 8
+// ============================================================================
+
+00500093  // 0x00: addi x1,  x0, 5       → x1 = 5
+00300113  // 0x04: addi x2,  x0, 3       → x2 = 3
+002081B3  // 0x08: add  x3,  x1, x2      → x3 = 8
+40208233  // 0x0C: sub  x4,  x1, x2      → x4 = 2
+00302023  // 0x10: sw   x3,  0(x0)       → mem[0] = 8
+00002283  // 0x14: lw   x5,  0(x0)       → x5 = 8
+00518463  // 0x18: beq  x3,  x5, +8      → taken, skip to 0x20
+06300313  // 0x1C: addi x6,  x0, 99      → SKIPPED (x6 stays 0)
+00100393  // 0x20: addi x7,  x0, 1       → x7 = 1  (branch target)
+0080046F  // 0x24: jal  x8,  +8          → x8 = 0x28, jump to 0x2C
+06300493  // 0x28: addi x9,  x0, 99      → SKIPPED (x9 stays 0)
+02A00513  // 0x2C: addi x10, x0, 42      → x10 = 42 (JAL target)
+00000013  // 0x30: nop (halt zone)
+00000013  // 0x34: nop
+00000013  // 0x38: nop
+00000013  // 0x3C: nop

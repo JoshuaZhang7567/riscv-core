@@ -37,9 +37,36 @@ alu_wave:
 	gtkwave $(ALU_VCD) &
 
 # ===========================================================================
+# System Test — Full CPU (test_basic.hex)
+# ===========================================================================
+RTL_SRC   = $(PKG) \
+            rtl/lib/adder.sv rtl/lib/mux2.sv rtl/lib/mux3.sv \
+            rtl/lib/flopr.sv rtl/lib/flopenr.sv \
+            $(CORE_DIR)/pc.sv $(CORE_DIR)/alu.sv $(CORE_DIR)/regfile.sv \
+            $(CORE_DIR)/immgen.sv $(CORE_DIR)/control.sv \
+            $(MEM_DIR)/imem.sv $(MEM_DIR)/dmem.sv \
+            $(TOP_DIR)/riscv_top.sv
+
+SYS_SRC   = $(RTL_SRC) $(TB_SYS)/tb_riscv_top.sv
+SYS_OUT   = $(WAVE_DIR)/tb_riscv_top.out
+SYS_VCD   = $(WAVE_DIR)/riscv_top.vcd
+
+test_cpu: test_cpu_compile test_cpu_run
+
+test_cpu_compile:
+	mkdir -p $(WAVE_DIR)
+	$(CC) $(CFLAGS) -o $(SYS_OUT) $(SYS_SRC)
+
+test_cpu_run:
+	vvp $(SYS_OUT)
+
+test_cpu_wave:
+	gtkwave $(SYS_VCD) &
+
+# ===========================================================================
 # Helpers
 # ===========================================================================
 clean:
 	rm -rf $(WAVE_DIR)/*.out $(WAVE_DIR)/*.vcd
 
-.PHONY: alu alu_compile alu_run alu_wave clean
+.PHONY: alu alu_compile alu_run alu_wave test_cpu test_cpu_compile test_cpu_run test_cpu_wave clean
