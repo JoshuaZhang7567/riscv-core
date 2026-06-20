@@ -231,7 +231,7 @@ module riscv_top #(
     alu main_alu (
         .a      (alu_a),
         .b      (alu_b),
-        .alu_op (alu_ctrl),
+        .alu_control (alu_ctrl),
         .result (alu_result),
         .zero   (alu_zero),
         .neg    (alu_neg),
