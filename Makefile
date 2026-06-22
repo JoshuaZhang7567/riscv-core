@@ -10,35 +10,13 @@ CORE_DIR  = rtl/core
 MEM_DIR   = rtl/mem
 PERIPH_DIR= rtl/periph
 TOP_DIR   = rtl/top
-TB_UNIT   = tb/unit
 TB_SYS    = tb/system
 WAVE_DIR  = sim/waveforms
 
 # --- Package (must be compiled first) ---
 PKG       = rtl/riscv_pkg.sv
 
-# ===========================================================================
-# ALU
-# ===========================================================================
-ALU_SRC   = $(PKG) $(CORE_DIR)/alu.sv $(TB_UNIT)/tb_alu.sv
-ALU_OUT   = $(WAVE_DIR)/tb_alu.out
-ALU_VCD   = $(WAVE_DIR)/alu_waves.vcd
-
-alu: alu_compile alu_run
-
-alu_compile:
-	mkdir -p $(WAVE_DIR)
-	$(CC) $(CFLAGS) -o $(ALU_OUT) $(ALU_SRC)
-
-alu_run:
-	vvp $(ALU_OUT)
-
-alu_wave:
-	gtkwave $(ALU_VCD) &
-
-# ===========================================================================
-# System Test — Full CPU (test_basic.hex)
-# ===========================================================================
+# --- All RTL source files ---
 RTL_SRC   = $(PKG) \
             rtl/lib/adder.sv rtl/lib/mux2.sv rtl/lib/mux3.sv \
             rtl/lib/flopr.sv rtl/lib/flopenr.sv \
@@ -47,21 +25,29 @@ RTL_SRC   = $(PKG) \
             $(MEM_DIR)/imem.sv $(MEM_DIR)/dmem.sv \
             $(TOP_DIR)/riscv_top.sv
 
-SYS_SRC   = $(RTL_SRC) $(TB_SYS)/tb_riscv_top.sv
-SYS_OUT   = $(WAVE_DIR)/tb_riscv_top.out
-SYS_VCD   = $(WAVE_DIR)/riscv_top.vcd
+# --- Universal testbench ---
+UNIV_SRC  = $(RTL_SRC) $(TB_SYS)/tb_riscv_universal.sv
+UNIV_OUT  = $(WAVE_DIR)/tb_riscv_universal.out
 
-test_cpu: test_cpu_compile test_cpu_run
-
-test_cpu_compile:
+# Compile (only needs to happen once unless RTL changes)
+test_compile:
 	mkdir -p $(WAVE_DIR)
-	$(CC) $(CFLAGS) -o $(SYS_OUT) $(SYS_SRC)
+	$(CC) $(CFLAGS) -o $(UNIV_OUT) $(UNIV_SRC)
 
-test_cpu_run:
-	vvp $(SYS_OUT)
+# Run a single test
+test: test_compile
+	vvp $(UNIV_OUT) +HEX_FILE=$(HEX) +EXPECTED=$(EXP)
 
-test_cpu_wave:
-	gtkwave $(SYS_VCD) &
+# Run all tests
+test_all: test_compile
+	@echo ""
+	@echo "============================================================"
+	@echo "  Running all tests..."
+	@echo "============================================================"
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_basic.hex +EXPECTED=sw/asm/test_basic.expected
+
+test_wave:
+	gtkwave $(WAVE_DIR)/riscv_universal.vcd &
 
 # ===========================================================================
 # Helpers
@@ -69,4 +55,4 @@ test_cpu_wave:
 clean:
 	rm -rf $(WAVE_DIR)/*.out $(WAVE_DIR)/*.vcd
 
-.PHONY: alu alu_compile alu_run alu_wave test_cpu test_cpu_compile test_cpu_run test_cpu_wave clean
+.PHONY: test_compile test test_all test_wave clean
