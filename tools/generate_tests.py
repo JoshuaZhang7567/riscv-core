@@ -337,6 +337,31 @@ def gen_test_edge():
     t.expect_reg(19, 1)            # SLTI negative < negative
     t.generate()
 
+def gen_test_fibonacci():
+    """Fibonacci series up to 10."""
+    t = TestProgram("test_fibonacci", cycles=200)
+    t.addi(1, 0, 1)        # x1 = 1  (fib_prev)
+    t.addi(2, 0, 1)        # x2 = 1  (fib_curr)
+    t.addi(3, 0, 9)        # x3 = 9 (loop limit)
+    t.addi(4, 0, 1)        # x4 = 1  (loop counter)
+    t.addi(5, 0, 0)        # x5 = 0  (temp)
+
+    # Loop start (PC=20)
+    t.sltu(7, 4, 3)        # x7 = 1 if (x4 < x3)
+    t.beq(7, 0, 24)        # if x7==0 (loop done), branch forward 6 instructions (+24 bytes)
+    t.mv(5, 1)             # temp = fib_prev
+    t.mv(1, 2)             # fib_prev = fib_curr
+    t.add(2, 1, 5)         # fib_curr = fib_prev + temp
+    t.addi(4, 4, 1)        # counter++
+    t.jal(0, -24)          # jump backward 6 instructions (-24 bytes) to sltu
+    
+    # Loop end (PC=48)
+    t.sw(2, 0, 4)          # store final result (x2) to memory at byte address 4 (word 1)
+
+    # The 10th Fibonacci number is 55 (0x37)
+    t.expect_reg(2, 55)
+    t.expect_mem(1, 55)
+    t.generate()
 
 # ============================================================================
 # Main: generate all tests
@@ -357,6 +382,8 @@ if __name__ == "__main__":
     gen_test_upper()
     print()
     gen_test_edge()
+    print()
+    gen_test_fibonacci()
     print()
     print("=" * 60)
     print("  Done! Run 'make test_all' to execute all tests.")

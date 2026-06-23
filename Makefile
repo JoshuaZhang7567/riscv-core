@@ -50,6 +50,7 @@ test_all: test_compile
 	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_memory.hex   +EXPECTED=sw/asm/test_memory.expected
 	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_upper.hex    +EXPECTED=sw/asm/test_upper.expected
 	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_edge.hex     +EXPECTED=sw/asm/test_edge.expected
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_fibonacci.hex +EXPECTED=sw/asm/test_fibonacci.expected
 
 test_wave:
 	gtkwave $(WAVE_DIR)/riscv_universal.vcd &
