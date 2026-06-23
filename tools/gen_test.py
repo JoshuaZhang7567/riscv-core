@@ -24,7 +24,7 @@ Usage:
 """
 
 import os
-import struct
+
 
 # ============================================================================
 # Encoding helpers
@@ -309,38 +309,4 @@ class TestProgram:
 def _sign_extend(value, bits):
     """Sign-extend a value from 'bits' width to Python int."""
     mask = 1 << (bits - 1)
-    return (value & ((1 << bits) - 1)) ^ mask - mask
-
-
-# ============================================================================
-# Example: regenerate test_basic
-# ============================================================================
-if __name__ == "__main__":
-    t = TestProgram("test_basic", cycles=20)
-
-    t.addi(1, 0, 5)        # x1 = 5
-    t.addi(2, 0, 3)        # x2 = 3
-    t.add(3, 1, 2)         # x3 = 8
-    t.sub(4, 1, 2)         # x4 = 2
-    t.sw(3, 0, 0)          # mem[0] = 8
-    t.lw(5, 0, 0)          # x5 = 8
-    t.beq(3, 5, 8)         # taken → skip next
-    t.addi(6, 0, 99)       # SKIPPED
-    t.addi(7, 0, 1)        # x7 = 1 (branch target)
-    t.jal(8, 8)            # x8 = PC+4, jump +8
-    t.addi(9, 0, 99)       # SKIPPED
-    t.addi(10, 0, 42)      # x10 = 42 (JAL target)
-
-    t.expect_reg(1, 5)
-    t.expect_reg(2, 3)
-    t.expect_reg(3, 8)
-    t.expect_reg(4, 2)
-    t.expect_mem(0, 8)
-    t.expect_reg(5, 8)
-    t.expect_reg_not(6, 99)
-    t.expect_reg(7, 1)
-    t.expect_reg(8, 0x28)
-    t.expect_reg_not(9, 99)
-    t.expect_reg(10, 42)
-
-    t.generate()
+    return ((value & ((1 << bits) - 1)) ^ mask) - mask

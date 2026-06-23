@@ -44,7 +44,12 @@ test_all: test_compile
 	@echo "============================================================"
 	@echo "  Running all tests..."
 	@echo "============================================================"
-	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_basic.hex +EXPECTED=sw/asm/test_basic.expected
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_basic.hex    +EXPECTED=sw/asm/test_basic.expected
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_alu.hex      +EXPECTED=sw/asm/test_alu.expected
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_branches.hex +EXPECTED=sw/asm/test_branches.expected
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_memory.hex   +EXPECTED=sw/asm/test_memory.expected
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_upper.hex    +EXPECTED=sw/asm/test_upper.expected
+	@vvp $(UNIV_OUT) +HEX_FILE=sw/asm/test_edge.hex     +EXPECTED=sw/asm/test_edge.expected
 
 test_wave:
 	gtkwave $(WAVE_DIR)/riscv_universal.vcd &
