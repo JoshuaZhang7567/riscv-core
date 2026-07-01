@@ -1,15 +1,3 @@
-//     ALU_SLT    (0101)  →  signed   (a < b) ? 1 : 0
-//     ALU_SLTU   (0110)  →  unsigned (a < b) ? 1 : 0
-//     ALU_SLL    (0111)  →  a << b[4:0]
-//     ALU_SRL    (1000)  →  a >> b[4:0]   (logical)
-//     ALU_SRA    (1001)  →  a >>> b[4:0]  (arithmetic)
-//     ALU_PASS_B (1010)  →  b             (LUI: passes ImmExt straight through)
-//
-//   Flags:
-//     zero  — result == 0  (used by branch logic: BEQ/BNE on SUB, BLT on SLT)
-//     neg   — result[31]   (sign bit, useful for richer branch decoding)
-//     ovf   — signed overflow (optional; useful for full flag-based branching)
-
 import riscv_pkg::*;
 
 module alu (
@@ -18,15 +6,13 @@ module alu (
     input  alu_control_t          alu_control,  // Operation select
 
     output logic [XLEN-1:0]       result,       // ALU result
-    output logic                  zero,         // result == 0
-    output logic                  neg,          // result[31] (sign bit)
-    output logic                  ovf           // Signed overflow
+    output logic                  zero          // result == 0
 );
 
   logic [XLEN-1:0] sum;
   logic            cout;
 
-  // Addition / Subtraction shared path
+  // Shared add/sub datapath
   always_comb begin
     if (alu_control == ALU_SUB)
       {cout, sum} = {1'b0, a} + {1'b0, ~b} + 33'd1;
@@ -52,20 +38,5 @@ module alu (
   end
 
   assign zero = (result == '0);
-  assign neg  = result[XLEN-1];
-
-  // Signed overflow: occurs on ADD/SUB when operand signs predict one result
-  // sign but the output sign differs.
-  //   ADD ovf: a[31]==b[31] but result[31] differs
-  //   SUB ovf: a[31]!=b[31] but result[31] == b[31]
-  always_comb begin
-    case (alu_control)
-      ALU_ADD: ovf = (~a[XLEN-1] & ~b[XLEN-1] &  result[XLEN-1])
-                   | ( a[XLEN-1] &  b[XLEN-1] & ~result[XLEN-1]);
-      ALU_SUB: ovf = (~a[XLEN-1] &  b[XLEN-1] &  result[XLEN-1])
-                   | ( a[XLEN-1] & ~b[XLEN-1] & ~result[XLEN-1]);
-      default: ovf = 1'b0;
-    endcase
-  end
 
 endmodule

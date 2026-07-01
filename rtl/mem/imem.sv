@@ -2,7 +2,7 @@ import riscv_pkg::*;
 
 module imem
 #(
-    parameter int unsigned DEPTH      = 1024,   // words (4 KiB)
+    parameter int unsigned DEPTH      = 1024,
     parameter              MEM_INIT_F = ""
 )
 (
@@ -17,7 +17,7 @@ module imem
         else for (int i = 0; i < DEPTH; i++) rom[i] = 32'h0000_0013; // NOP
     end
 
-    // Drop byte-select bits [1:0] to get word index
+    // Word-aligned addressing
     localparam int WORD_ADDR_W = $clog2(DEPTH);
     logic [WORD_ADDR_W-1:0] word_addr;
     assign word_addr = pc_addr[WORD_ADDR_W+1:2];
