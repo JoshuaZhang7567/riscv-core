@@ -49,11 +49,14 @@ brew install --cask gtkwave
 ### 2. Build & Run
 
 ```bash
-# Compile and simulate the ALU testbench
-make alu
+# Compile and run all tests
+make test_all
+
+# Run a single test
+make test HEX=sw/asm/test_basic.hex EXP=sw/asm/test_basic.expected
 
 # Open waveforms in GTKWave
-make alu_wave
+make test_wave
 
 # Clean simulation artifacts
 make clean
